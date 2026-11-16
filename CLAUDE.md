@@ -138,5 +138,7 @@ Phase 8 — Later: AI features, booking engine and other integrations.
 GHL stays active until the replacement for each feature has been running
 reliably in production. Do not suggest cancelling GHL features early.
 
-**Current phase: 1.** Do not start work from a later phase unless I ask.
+**Current phase: 2.** (Phase 1 completed 2026-11-16 — development and staging are live;
+production is not set up yet, see `docs/production-checklist.md`.)
+Do not start work from a later phase unless I ask.
 Update this line when a phase is complete.
