@@ -31,6 +31,8 @@ before the Phase 2 GHL import into production.
       `NEXT_PUBLIC_SENTRY_DSN`, optional `SENTRY_ORG` / `SENTRY_PROJECT` / `SENTRY_AUTH_TOKEN`.
 - [ ] Production deploys only from GitHub `main` after the automatic checks pass —
       never deploy from a computer directly.
+- [ ] Apply new database migrations to production **before** the code that needs them
+      goes live (otherwise new code briefly runs against the old database).
 - [ ] Custom domain with HTTPS.
 
 ## Monitoring

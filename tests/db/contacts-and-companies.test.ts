@@ -19,8 +19,10 @@ const createdCompanies: string[] = [];
 
 const tag = randomUUID().slice(0, 8);
 const email = (label: string) => `crm-test-${label}-${tag}@example.com`;
-let phoneCounter = 100;
-const phone = () => `+1603555${String(phoneCounter++).padStart(4, "0")}`;
+// 555-01xx numbers are reserved for fiction. Tests use area code 212 (demo data uses 603)
+// and a random start, so they never clash with demo records or with each other.
+let phoneCounter = 100 + Math.floor(Math.random() * 80);
+const phone = () => `+1212555${String(phoneCounter++).padStart(4, "0")}`;
 
 beforeAll(async () => {
   member = await createTestUser(admin, "cc-member");
