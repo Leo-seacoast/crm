@@ -138,7 +138,10 @@ Phase 8 — Later: AI features, booking engine and other integrations.
 GHL stays active until the replacement for each feature has been running
 reliably in production. Do not suggest cancelling GHL features early.
 
-**Current phase: 2.** (Phase 1 completed 2026-11-16 — development and staging are live;
-production is not set up yet, see `docs/production-checklist.md`.)
+**Current phase: 3.** (Phase 1 completed 2026-11-16 — development and staging are live;
+production is not set up yet, see `docs/production-checklist.md`.
+Phase 2 completed 2026-11-16 — GHL contact/company import with preview, duplicate check
+and undo; GHL pipelines recreated as migrations. Opportunities not imported (GHL only had
+test cards). Notes not imported: they stay in GHL for now.)
 Do not start work from a later phase unless I ask.
 Update this line when a phase is complete.
