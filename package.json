@@ -13,6 +13,10 @@
     "test:db": "vitest run --config vitest.db.config.mts",
     "test:db:staging": "vitest run --config vitest.db.config.mts --mode staging",
     "make-admin:staging": "node --env-file=.env.staging.local scripts/make-admin.mjs",
+    "demo:load:staging": "node --env-file=.env.staging.local scripts/seed-demo.mjs load",
+    "demo:remove:staging": "node --env-file=.env.staging.local scripts/seed-demo.mjs remove",
+    "demo:load": "node --env-file=.env.local scripts/seed-demo.mjs load",
+    "demo:remove": "node --env-file=.env.local scripts/seed-demo.mjs remove",
     "db:push": "supabase db push --remote",
     "db:types": "supabase gen types typescript --remote > src/lib/supabase/database.types.ts",
     "make-admin": "node --env-file=.env.local scripts/make-admin.mjs"
