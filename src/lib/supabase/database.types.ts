@@ -834,7 +834,7 @@ export type Database = {
       actor_type: "user" | "system" | "automation"
       app_role: "admin" | "member"
       consent_status: "unknown" | "opted_in" | "opted_out"
-      contact_type: "lead" | "client" | "owner" | "guest" | "vendor" | "partner"
+      contact_type: "lead" | "guest" | "member"
       import_kind: "contacts" | "companies" | "deals" | "notes"
       import_status: "in_progress" | "completed" | "undone"
       stage_kind: "open" | "won" | "lost"
@@ -972,7 +972,7 @@ export const Constants = {
       actor_type: ["user", "system", "automation"],
       app_role: ["admin", "member"],
       consent_status: ["unknown", "opted_in", "opted_out"],
-      contact_type: ["lead", "client", "owner", "guest", "vendor", "partner"],
+      contact_type: ["lead", "guest", "member"],
       import_kind: ["contacts", "companies", "deals", "notes"],
       import_status: ["in_progress", "completed", "undone"],
       stage_kind: ["open", "won", "lost"],

@@ -17,7 +17,7 @@ describe("contact form", () => {
           ["email", " Jane@Example.COM "],
           ["phone", "(603) 555-0123"],
           ["types", "lead"],
-          ["types", "owner"],
+          ["types", "member"],
           ["types", "lead"],
           ["tags", "vip, beach house ,vip"],
           ["time_zone", "America/New_York"],
@@ -29,7 +29,7 @@ describe("contact form", () => {
     expect(r.last_name).toBeNull();
     expect(r.email).toBe("jane@example.com");
     expect(r.phone).toBe("+16035550123");
-    expect(r.types).toEqual(["lead", "owner"]);
+    expect(r.types).toEqual(["lead", "member"]);
     expect(r.tags).toEqual(["vip", "beach house"]);
     expect(r.email_consent).toBe("unknown");
     expect(r).not.toHaveProperty("$ACTION_ID_abc");
@@ -44,6 +44,7 @@ describe("contact form", () => {
     expect(contactSchema.safeParse({ first_name: "A", email: "nope" }).success).toBe(false);
     expect(contactSchema.safeParse({ first_name: "A", phone: "123" }).success).toBe(false);
     expect(contactSchema.safeParse({ first_name: "A", types: ["boss"] }).success).toBe(false);
+    expect(contactSchema.safeParse({ first_name: "A", types: ["owner"] }).success).toBe(false); // removed type
     expect(contactSchema.safeParse({ first_name: "A", time_zone: "Mars/Base" }).success).toBe(false);
   });
 

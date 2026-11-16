@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { MAX_EXTRA_VALUE } from "./ghl-contacts";
+import { CONTACT_TYPES } from "@/lib/records/schemas";
 
 /**
  * The server re-checks every row the browser sends, because anything coming
@@ -19,7 +20,7 @@ export const importContactRowSchema = z
     email: z.string().max(320).regex(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/).nullable(),
     phone: z.string().regex(PHONE).nullable(),
     company_id: z.uuid().nullable(),
-    types: z.array(z.enum(["lead", "client", "owner", "guest", "vendor", "partner"])).max(6),
+    types: z.array(z.enum(CONTACT_TYPES)).max(CONTACT_TYPES.length),
     tags: z.array(z.string().max(50)).max(50),
     created_at: z.iso.datetime().nullable(),
     address_line1: text(200),

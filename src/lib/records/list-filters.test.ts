@@ -19,12 +19,13 @@ class FakeQuery {
 
 describe("list filters", () => {
   it("reads contact filters safely from the address bar", () => {
-    expect(parseContactFilters({ q: " Jane% ", type: "owner", archived: "1" })).toEqual({
+    expect(parseContactFilters({ q: " Jane% ", type: "member", archived: "1" })).toEqual({
       q: "jane",
-      type: "owner",
+      type: "member",
       archived: true,
     });
     expect(parseContactFilters({ type: "boss" }).type).toBeNull();
+    expect(parseContactFilters({ type: "owner" }).type).toBeNull(); // removed type
   });
 
   it("applies the same filters as the list page", () => {

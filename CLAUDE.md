@@ -1,14 +1,31 @@
 # CLAUDE.md — CRM Project
 
 ## About this project
-A custom, fully owned replacement for GoHighLevel (GHL). It covers:
-- CRM: contacts, companies, pipelines and deals
-- Email and SMS automations, including follow-up reminders
-- Forms and landing pages that capture leads directly into the CRM
+A custom, fully owned, **guest-facing** CRM that replaces GoHighLevel (GHL) and is
+the **central database of guests, leads and members**. Scope (changed 2026-11-16):
+- MTR (mid-term rental) leads: capture, pipeline, follow-up tasks
+- The membership program (member records; membership itself will later move into Kismet)
+- Internal reminders and alerts for our team (not marketing to guests)
+- Marketing reporting: a full-funnel dashboard across our marketing (later phase)
 
-Contacts are a mix of types (leads, clients, property owners, guests, vendors,
-partners). It starts with a single user (the owner) and will later be used by a
+Out of scope: property owners, owner onboarding, vendors/partners, and marketing
+emails/SMS to guests (Kismet handles guest marketing).
+
+Contact types: lead, guest, member (a contact can have several). It starts with a
+single user (the owner, who is the marketing manager) and will later be used by a
 small team. Owning our data and avoiding lock-in to any vendor is a core goal.
+
+## Our other tools (how the CRM fits in)
+- **Kismet** — booking engine and guest email marketing (onboarding Nov 2026);
+  membership features will move into Kismet in ~1–2 months. The CRM shares
+  contacts and consent with Kismet (integration phase).
+- **Guesty** — property management system (reservations). Stays the system for bookings.
+- **CraftedStays** — hosts our website.
+- **Studio82** — agency for SEO, AEO, paid ads, and Google Analytics (monthly reports).
+- **Stripe** — membership payments (currently via GHL). Our own Stripe automation is
+  ON HOLD because membership moves to Kismet.
+- **GHL** — current CRM; the MTR form currently lives in GHL. Stays active until each
+  replacement has proven itself in production.
 
 ## About me (the owner)
 I am NOT a developer. Please:
@@ -27,9 +44,9 @@ I am NOT a developer. Please:
   or a host whose free tier allows commercial use (Cloudflare or Netlify). Ask me.
 - Database + login: Supabase (Postgres, Supabase Auth). Upgrade to Pro (daily
   backups) BEFORE any real customer data is added.
-- Background jobs / scheduling: Trigger.dev (or Inngest, if agreed)
-- Email sending: Resend
-- SMS: to be chosen in the SMS phase (e.g. Twilio); ask me first
+- Background jobs / scheduling: Inngest (agreed 2026-11-16, instead of Trigger.dev)
+- Email sending: Resend (internal emails to our team)
+- SMS: not planned (guest messaging is handled by Kismet); ask me first if needed
 - Error monitoring: Sentry
 - Code storage: GitHub
 Prefer well-known, widely used libraries. Do not add a new dependency without
@@ -44,12 +61,11 @@ explaining what it does and why it's needed.
 
 ## Data model rules
 - One `contacts` table. A contact can have MULTIPLE types
-  (lead, client, owner, guest, vendor, partner). Do NOT create separate tables
-  per contact type.
-- `companies` is its own table, linked to contacts.
+  (lead, guest, member). Do NOT create separate tables per contact type.
+- `companies` is its own table, linked to contacts (e.g. staffing agencies or
+  employers that send MTR guests).
 - Pipelines: `pipelines` -> `pipeline_stages` -> `deals`. A deal links to a
-  contact and/or company. Multiple pipelines are supported (e.g. sales, owner
-  onboarding).
+  contact and/or company. Active pipelines: MTR Pipeline, Membership Program.
 - Every record has: `id`, `created_at`, `updated_at`, `created_by`, `owner_id`.
 - Keep an `activity_log` table recording every create/update/delete and every
   automated action (who or what did it, when, and what changed).
@@ -121,19 +137,27 @@ explaining what it does and why it's needed.
 6. Commit to git with a clear message once it works.
 7. Short security review of what was built.
 
-## Roadmap
-Phase 1 — Foundation: login, roles, contacts (multi-type), companies, pipelines
-  and deals, notes, activity log, RLS, CSV export, dev/staging/prod environments,
-  Sentry.
-Phase 2 — GHL import: import contacts, companies, pipelines/deals and notes from
-  GHL CSV exports, with a preview and duplicate check before anything is saved.
-Phase 3 — Follow-up reminders: tasks with due dates, daily summary email to me.
-Phase 4 — Forms and landing pages: lead capture into the CRM with all the
-  public-form safeguards above.
-Phase 5 — Email automations: templates, approval queue, all messaging safeguards.
-Phase 6 — Team: invites, roles in the UI, assigning contacts, deals and tasks.
-Phase 7 — SMS: provider setup, consent, opt-out handling, then automations.
-Phase 8 — Later: AI features, booking engine and other integrations.
+## Roadmap (revised 2026-11-16 for the guest-facing scope)
+Phase 1 — Foundation (done): login, roles, contacts, companies, pipelines and deals,
+  notes, activity log, RLS, CSV export, dev/staging environments, Sentry.
+Phase 2 — GHL import (done): contacts/companies from GHL CSV with preview, duplicate
+  check and undo; GHL pipelines recreated.
+Phase 3 — Follow-up reminders: tasks with due dates (done), business settings,
+  daily summary email to me.
+Phase 4 — MTR form into the CRM: first by forwarding GHL form submissions to the
+  CRM, later optionally a CRM-hosted form; capture lead source / UTM tags on every
+  lead for reporting; all public-form safeguards above.
+Phase 5 — Reporting v1: full-funnel marketing dashboard from CRM data (leads by
+  source, pipeline conversion, members), then outside sources.
+Phase 6 — Kismet and data sources: share contacts/consent with Kismet; bring in
+  marketing data (Google Analytics and ads via Studio82 access, Kismet stats);
+  later membership/payment status from Kismet. Zapier, Slack, Notion as needed.
+Phase 7 — Internal automations: alerts and reminders to our team (e.g. new MTR lead,
+  payment failed, renewals due), automatic tasks. Messaging rules above still apply.
+Phase 8 — Team: invites, roles in the UI, assigning leads/members/tasks, deactivate
+  (never delete) people who leave.
+On hold — Own Stripe/membership automation (membership moving to Kismet); SMS.
+Later — AI features.
 
 GHL stays active until the replacement for each feature has been running
 reliably in production. Do not suggest cancelling GHL features early.

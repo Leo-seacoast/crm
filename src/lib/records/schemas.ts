@@ -5,16 +5,14 @@ import { parseMoney } from "@/lib/money";
 // ---------------------------------------------------------------------------
 // Labels shown on screen
 // ---------------------------------------------------------------------------
-export const CONTACT_TYPES = ["lead", "client", "owner", "guest", "vendor", "partner"] as const;
+// Guest-facing CRM: MTR leads, guests and membership-program members.
+export const CONTACT_TYPES = ["lead", "guest", "member"] as const;
 export type ContactType = (typeof CONTACT_TYPES)[number];
 
 export const CONTACT_TYPE_LABELS: Record<ContactType, string> = {
   lead: "Lead",
-  client: "Client",
-  owner: "Property owner",
   guest: "Guest",
-  vendor: "Vendor",
-  partner: "Partner",
+  member: "Member",
 };
 
 export const CONSENT_STATUSES = ["unknown", "opted_in", "opted_out"] as const;

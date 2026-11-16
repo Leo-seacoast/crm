@@ -79,12 +79,12 @@ describe("companies", () => {
 describe("contacts: basics", () => {
   it("a member can add a contact with several types; creator can't be faked", async () => {
     const { data, error } = await newContact({
-      types: ["lead", "owner", "lead"],
+      types: ["lead", "member", "lead"],
       created_by: boss.id,
       company_id: createdCompanies[0],
     });
     expect(error).toBeNull();
-    expect(data!.types).toEqual(["lead", "owner"]);
+    expect(data!.types).toEqual(["lead", "member"]);
     expect(data!.created_by).toBe(member.id);
   });
 
