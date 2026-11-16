@@ -247,6 +247,169 @@ export type Database = {
           },
         ]
       }
+      deals: {
+        Row: {
+          archived_at: string | null
+          closed_at: string | null
+          company_id: string | null
+          contact_id: string | null
+          created_at: string
+          created_by: string | null
+          currency: string
+          expected_close_date: string | null
+          id: string
+          owner_id: string | null
+          pipeline_id: string
+          stage_id: string
+          title: string
+          updated_at: string
+          value: number | null
+        }
+        Insert: {
+          archived_at?: string | null
+          closed_at?: string | null
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          expected_close_date?: string | null
+          id?: string
+          owner_id?: string | null
+          pipeline_id: string
+          stage_id: string
+          title: string
+          updated_at?: string
+          value?: number | null
+        }
+        Update: {
+          archived_at?: string | null
+          closed_at?: string | null
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          expected_close_date?: string | null
+          id?: string
+          owner_id?: string | null
+          pipeline_id?: string
+          stage_id?: string
+          title?: string
+          updated_at?: string
+          value?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deals_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deals_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deals_pipeline_id_fkey"
+            columns: ["pipeline_id"]
+            isOneToOne: false
+            referencedRelation: "pipelines"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deals_stage_id_pipeline_id_fkey"
+            columns: ["stage_id", "pipeline_id"]
+            isOneToOne: false
+            referencedRelation: "pipeline_stages"
+            referencedColumns: ["id", "pipeline_id"]
+          },
+        ]
+      }
+      pipeline_stages: {
+        Row: {
+          archived_at: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          kind: Database["public"]["Enums"]["stage_kind"]
+          name: string
+          owner_id: string | null
+          pipeline_id: string
+          position: number
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["stage_kind"]
+          name: string
+          owner_id?: string | null
+          pipeline_id: string
+          position?: number
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["stage_kind"]
+          name?: string
+          owner_id?: string | null
+          pipeline_id?: string
+          position?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pipeline_stages_pipeline_id_fkey"
+            columns: ["pipeline_id"]
+            isOneToOne: false
+            referencedRelation: "pipelines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pipelines: {
+        Row: {
+          archived_at: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          owner_id: string | null
+          position: number
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          owner_id?: string | null
+          position?: number
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          owner_id?: string | null
+          position?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           archived_at: string | null
@@ -307,6 +470,7 @@ export type Database = {
       app_role: "admin" | "member"
       consent_status: "unknown" | "opted_in" | "opted_out"
       contact_type: "lead" | "client" | "owner" | "guest" | "vendor" | "partner"
+      stage_kind: "open" | "won" | "lost"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -441,6 +605,7 @@ export const Constants = {
       app_role: ["admin", "member"],
       consent_status: ["unknown", "opted_in", "opted_out"],
       contact_type: ["lead", "client", "owner", "guest", "vendor", "partner"],
+      stage_kind: ["open", "won", "lost"],
     },
   },
 } as const

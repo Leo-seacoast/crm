@@ -12,7 +12,10 @@ export function friendlyDbError(error: DbError): string {
       return "This would create a duplicate.";
     case "42501": // permission / rule from the database
       // Our own rules raise readable messages; show those, hide anything else.
-      if (/opt|consent|admin|role/i.test(error.message ?? "")) return error.message!;
+      if (/row-level security|permission denied/i.test(error.message ?? "")) {
+        return "You don't have permission to do that.";
+      }
+      if (/opt|consent|admin|role|stage|pipeline|archived/i.test(error.message ?? "")) return error.message!;
       return "You don't have permission to do that.";
     case "23514": // check rule
       return "Some details aren't valid. Please check the form.";

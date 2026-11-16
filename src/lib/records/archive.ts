@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { friendlyDbError } from "./db-errors";
 
-export type ArchivableTable = "contacts" | "companies";
+export type ArchivableTable = "contacts" | "companies" | "deals";
 
 /**
  * Archive (soft delete) or restore a record.

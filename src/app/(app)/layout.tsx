@@ -19,9 +19,17 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <Link href="/companies" className="hover:underline">
             Companies
           </Link>
+          <Link href="/deals" className="hover:underline">
+            Deals
+          </Link>
           <Link href="/activity" className="hover:underline">
             Activity
           </Link>
+          {user.role === "admin" && (
+            <Link href="/settings/pipelines" className="hover:underline">
+              Settings
+            </Link>
+          )}
         </nav>
         <div className="flex items-center gap-4 text-sm">
           <span>

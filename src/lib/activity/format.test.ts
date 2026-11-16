@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { actionLabel, actorLabel, describeChanges, formatValue, recordName, tableLabel } from "./format";
+import {
+  actionLabel,
+  actorLabel,
+  describeChanges,
+  formatValue,
+  recordName,
+  referencedIds,
+  tableLabel,
+} from "./format";
 
 describe("who did it", () => {
   it("shows the person's name, falling back to email", () => {
@@ -17,7 +25,8 @@ describe("who did it", () => {
 describe("activity log wording", () => {
   it("uses plain-English labels", () => {
     expect(tableLabel("profiles")).toBe("Team member");
-    expect(tableLabel("pipeline_stages")).toBe("Pipeline stages");
+    expect(tableLabel("pipeline_stages")).toBe("Stage");
+    expect(tableLabel("some_new_table")).toBe("Some new table");
     expect(actionLabel("archive")).toBe("archived");
     expect(actionLabel("email_sent")).toBe("Email sent");
   });
@@ -53,6 +62,17 @@ describe("activity log wording", () => {
     expect(recordName(null)).toBeNull();
     expect(recordName({ first_name: "Jane", last_name: "Doe", email: "j@x.co" })).toBe("Jane Doe");
     expect(recordName({ name: "Acme" })).toBe("Acme");
+  });
+
+  it("shows stage names instead of internal ids", () => {
+    const changes = { stage_id: { old: "s1", new: "s2" }, value: { old: 100, new: 200 } };
+    const names = (id: string) => ({ s1: "Contacted", s2: "Proposal sent" })[id];
+    expect(describeChanges("update", changes, names)).toEqual([
+      { field: "Stage", from: "Contacted", to: "Proposal sent" },
+      { field: "Value", from: "100", to: "200" },
+    ]);
+    expect(referencedIds([{ changes }, { changes: null }])).toEqual(["s1", "s2"]);
+    expect(describeChanges("update", { stage_id: { old: "gone", new: "s2" } }, names)[0].from).toBe("(removed record)");
   });
 
   it("ignores malformed change data instead of crashing", () => {

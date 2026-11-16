@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-import { actionLabel, actorLabel, describeChanges } from "@/lib/activity/format";
+import { actionLabel, actorLabel, describeChanges, referencedIds } from "@/lib/activity/format";
+import { loadNames } from "@/lib/activity/names";
 
 /** The change history for one record, from the activity log. */
 export async function RecordHistory({ table, recordId }: { table: string; recordId: string }) {
@@ -11,6 +12,7 @@ export async function RecordHistory({ table, recordId }: { table: string; record
     .eq("record_id", recordId)
     .order("occurred_at", { ascending: false })
     .limit(50);
+  const names = await loadNames(referencedIds(entries ?? []));
 
   return (
     <section className="flex flex-col gap-3">
@@ -18,7 +20,7 @@ export async function RecordHistory({ table, recordId }: { table: string; record
       {(!entries || entries.length === 0) && <p className="text-sm text-muted-foreground">No history yet.</p>}
       <ol className="flex flex-col divide-y divide-border">
         {entries?.map((e) => {
-          const fields = describeChanges(e.action, e.changes);
+          const fields = describeChanges(e.action, e.changes, names);
           return (
             <li key={e.id} className="flex flex-col gap-1 py-2 text-sm">
               <div>

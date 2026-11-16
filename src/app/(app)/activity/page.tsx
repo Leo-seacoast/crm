@@ -1,10 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
+import { loadNames } from "@/lib/activity/names";
 import { requireUser } from "@/lib/auth/session";
 import {
   actionLabel,
   actorLabel,
   describeChanges,
   recordName,
+  referencedIds,
   tableLabel,
 } from "@/lib/activity/format";
 
@@ -37,6 +39,7 @@ export default async function ActivityPage() {
     ? await supabase.from("profiles").select("id, full_name, email").in("id", profileIds)
     : { data: [] };
   const currentName = new Map((people ?? []).map((p) => [p.id, p.full_name ?? p.email]));
+  const names = await loadNames(referencedIds(entries ?? []));
 
   return (
     <main className="mx-auto flex max-w-3xl flex-col gap-6 p-8">
@@ -60,7 +63,7 @@ export default async function ActivityPage() {
           const who = actorLabel(e.actor_type, e.actor);
           const name =
             recordName(e.changes) ?? (e.record_id ? currentName.get(e.record_id) : undefined) ?? null;
-          const fields = describeChanges(e.action, e.changes);
+          const fields = describeChanges(e.action, e.changes, names);
           return (
             <li key={e.id} className="flex flex-col gap-1 py-3">
               <div className="text-sm">

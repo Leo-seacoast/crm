@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { normalizePhone } from "@/lib/phone";
+import { parseMoney } from "@/lib/money";
 
 // ---------------------------------------------------------------------------
 // Labels shown on screen
@@ -182,6 +183,60 @@ export const contactSchema = z
     }
   });
 export type ContactInput = z.infer<typeof contactSchema>;
+
+// ---------------------------------------------------------------------------
+// Deal form
+// ---------------------------------------------------------------------------
+export const STAGE_KINDS = ["open", "won", "lost"] as const;
+export type StageKind = (typeof STAGE_KINDS)[number];
+export const STAGE_KIND_LABELS: Record<StageKind, string> = { open: "Open", won: "Won", lost: "Lost" };
+
+/** " (Won)" after a stage name in dropdowns — unless the name already says it. */
+export function stageSuffix(stage: { name: string; kind: StageKind }): string {
+  if (stage.kind === "open") return "";
+  const label = STAGE_KIND_LABELS[stage.kind];
+  return stage.name.toLowerCase() === label.toLowerCase() ? "" : ` (${label})`;
+}
+
+const optionalMoney = z
+  .unknown()
+  .optional()
+  .transform((v, ctx) => {
+    const r = parseMoney(v);
+    if (!r.ok) {
+      ctx.addIssue({ code: "custom", message: r.error });
+      return z.NEVER;
+    }
+    return r.value;
+  });
+
+const optionalDate = z
+  .string()
+  .trim()
+  .transform((v) => (v === "" ? null : v))
+  .pipe(z.iso.date({ message: "Enter a valid date" }).nullable())
+  .nullable()
+  .optional()
+  .transform((v) => v ?? null);
+
+export const dealSchema = z
+  .object({
+    title: z.string().trim().min(1, "Deal name is required").max(200, "Name is too long"),
+    pipeline_id: z.uuid({ message: "Choose a pipeline" }),
+    stage_id: z.uuid({ message: "Choose a stage" }),
+    contact_id: optionalUuid,
+    company_id: optionalUuid,
+    value: optionalMoney,
+    expected_close_date: optionalDate,
+  })
+  .superRefine((d, ctx) => {
+    if (!d.contact_id && !d.company_id) {
+      ctx.addIssue({ code: "custom", path: ["contact_id"], message: "Link this deal to a contact or a company" });
+    }
+  });
+export type DealInput = z.infer<typeof dealSchema>;
+
+export const pipelineNameSchema = z.string().trim().min(1, "Name is required").max(100, "Name is too long");
 
 // ---------------------------------------------------------------------------
 // Reading HTML form data

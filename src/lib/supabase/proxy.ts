@@ -57,6 +57,15 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (isLoggedIn && pathname === "/login") {
+    // A login token can still look valid after the account was removed or
+    // deactivated. Double-check with Supabase before sending the person on;
+    // otherwise clear the stale login, so the login page shows (no redirect loop).
+    const deactivated = request.nextUrl.searchParams.has("error");
+    const { data: verified } = deactivated ? { data: { user: null } } : await supabase.auth.getUser();
+    if (!verified.user) {
+      await supabase.auth.signOut({ scope: "local" });
+      return response;
+    }
     const url = request.nextUrl.clone();
     url.pathname = "/";
     url.search = "";
