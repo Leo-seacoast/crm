@@ -9,7 +9,11 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:db": "vitest run --config vitest.db.config.mts",
+    "db:push": "supabase db push --remote",
+    "db:types": "supabase gen types typescript --remote > src/lib/supabase/database.types.ts",
+    "make-admin": "node --env-file=.env.local scripts/make-admin.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

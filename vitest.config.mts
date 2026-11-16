@@ -12,5 +12,7 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["src/**/*.test.ts", "tests/**/*.test.ts"],
+    // Database tests need network + .env.local; run them with `npm run test:db`.
+    exclude: ["tests/db/**", "node_modules/**"],
   },
 });
