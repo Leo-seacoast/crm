@@ -3,6 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import { CSV_BOM, csvFilename, csvHeader, csvLine } from "@/lib/csv";
 import { EXPORTS } from "@/lib/export/definitions";
+import { reportError } from "@/lib/monitoring";
 
 const BATCH_SIZE = 1000;
 const MAX_ROWS = 500_000; // hard stop, so a runaway export can't loop forever
@@ -70,6 +71,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         });
         controller.close();
       } catch (e) {
+        reportError(e, { area: "csv-export", table: def.table });
         controller.error(e);
       }
     },

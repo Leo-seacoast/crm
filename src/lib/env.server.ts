@@ -28,6 +28,16 @@ export function getServerEnv(): ServerEnv {
   return parseServerEnv(process.env);
 }
 
+/**
+ * Which environment this is. Reads only APP_ENV (no secrets needed).
+ * Anything missing or misspelled counts as "development" — the SAFEST choice,
+ * because development is where all messaging is locked to the owner.
+ */
+export function getAppEnv(source: Record<string, string | undefined> = process.env): AppEnv {
+  const v = source.APP_ENV;
+  return (APP_ENVS as readonly string[]).includes(v ?? "") ? (v as AppEnv) : "development";
+}
+
 /** True only in production. Used later to enforce "owner-only" messaging everywhere else. */
 export function isProduction(): boolean {
   return getServerEnv().APP_ENV === "production";

@@ -1,6 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { parsePublicEnv } from "./env";
-import { parseServerEnv } from "./env.server";
+import { getAppEnv, parseServerEnv } from "./env.server";
+
+describe("getAppEnv", () => {
+  it("reads the three known environments", () => {
+    expect(getAppEnv({ APP_ENV: "staging" })).toBe("staging");
+    expect(getAppEnv({ APP_ENV: "production" })).toBe("production");
+  });
+  it("treats missing or misspelled values as development (the safest)", () => {
+    expect(getAppEnv({})).toBe("development");
+    expect(getAppEnv({ APP_ENV: "prod" })).toBe("development");
+  });
+});
 
 describe("public settings", () => {
   it("accepts a valid Supabase URL and key", () => {

@@ -1,0 +1,45 @@
+# Automatic checks: run on every change sent to GitHub.
+# If any step fails, GitHub marks the change with a red cross and emails the owner.
+name: Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # Placeholders only — the build needs these to exist, but CI never talks to a real database.
+      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: placeholder
+      SUPABASE_SECRET_KEY: placeholder
+      APP_ENV: development
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install exact versions from package-lock.json
+        run: npm ci
+      - name: Check for known security problems in the app's packages
+        run: npm audit --omit=dev --audit-level=high
+      - name: Code style check
+        run: npm run lint
+      - name: Type check
+        run: npm run typecheck
+      - name: Automated tests
+        run: npm test
+      - name: Production build
+        run: npm run build
