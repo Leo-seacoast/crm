@@ -5,6 +5,7 @@ import { loadPipelines } from "@/lib/records/pipelines";
 import { formatPhone } from "@/lib/phone";
 import { Button } from "@/components/ui/button";
 import { DealBoard, type BoardDeal } from "./deal-board";
+import { ExportButton } from "@/components/export-button";
 
 export const metadata = { title: "Deals · CRM" };
 
@@ -67,9 +68,17 @@ export default async function DealsPage({ searchParams }: { searchParams: Promis
             ))}
           </nav>
         </div>
-        <Button asChild>
-          <Link href={`/deals/new?pipeline=${pipeline.id}`}>Add deal</Link>
-        </Button>
+        <div className="flex gap-2">
+          {user.role === "admin" && (
+            <>
+              <ExportButton href={`/export/deals?pipeline=${pipeline.id}`} label="Export this pipeline" />
+              <ExportButton href="/export/deals" label="Export all deals" />
+            </>
+          )}
+          <Button asChild>
+            <Link href={`/deals/new?pipeline=${pipeline.id}`}>Add deal</Link>
+          </Button>
+        </div>
       </div>
       <p className="text-xs text-muted-foreground">Drag a card to another column to change its stage.</p>
       {/* key: reset the board when switching pipelines */}

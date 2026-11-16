@@ -28,6 +28,7 @@ describe("activity log wording", () => {
     expect(tableLabel("pipeline_stages")).toBe("Stage");
     expect(tableLabel("some_new_table")).toBe("Some new table");
     expect(actionLabel("archive")).toBe("archived");
+    expect(actionLabel("export")).toBe("exported");
     expect(actionLabel("email_sent")).toBe("Email sent");
   });
 

@@ -8,6 +8,7 @@ const TABLE_LABELS: Record<string, string> = {
   pipelines: "Pipeline",
   pipeline_stages: "Stage",
   notes: "Note",
+  activity_log: "Activity log",
 };
 
 const ACTION_LABELS: Record<string, string> = {
@@ -16,6 +17,7 @@ const ACTION_LABELS: Record<string, string> = {
   archive: "archived",
   restore: "restored",
   delete: "permanently deleted",
+  export: "exported",
 };
 
 /** Friendlier names for fields that would read oddly if just "humanized". */

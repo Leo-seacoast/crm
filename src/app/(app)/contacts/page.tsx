@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { cleanSearch, pageNumber, phoneDigits } from "@/lib/search";
+import { pageNumber } from "@/lib/search";
 import { formatPhone } from "@/lib/phone";
-import { CONTACT_TYPE_LABELS, CONTACT_TYPES, type ContactType } from "@/lib/records/schemas";
+import { CONTACT_TYPE_LABELS, CONTACT_TYPES } from "@/lib/records/schemas";
+import { applyContactFilters, filtersToQuery, parseContactFilters } from "@/lib/records/list-filters";
+import { requireUser } from "@/lib/auth/session";
+import { ExportButton } from "@/components/export-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -20,13 +23,13 @@ export default async function ContactsPage({
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const params = await searchParams;
-  const q = cleanSearch(params.q);
-  const type = CONTACT_TYPES.includes(params.type as ContactType) ? (params.type as ContactType) : null;
-  const showArchived = params.archived === "1";
+  const filters = parseContactFilters(params);
+  const { q, type, archived: showArchived } = filters;
   const page = pageNumber(params.page);
+  const user = await requireUser();
 
   const supabase = await createClient();
-  let query = supabase
+  const base = supabase
     .from("contacts")
     .select("id, first_name, last_name, email, phone, types, archived_at, company:companies(id, name)", {
       count: "exact",
@@ -35,23 +38,19 @@ export default async function ContactsPage({
     .order("first_name", { ascending: true, nullsFirst: false })
     .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
 
-  query = showArchived ? query.not("archived_at", "is", null) : query.is("archived_at", null);
-  if (type) query = query.contains("types", [type]);
-  if (q) {
-    // Phone searches match the digits however they were typed: "(603) 555" finds +1603555...
-    const digits = phoneDigits(q);
-    query = digits ? query.ilike("phone", `%${digits}%`) : query.ilike("search_text", `%${q}%`);
-  }
-
-  const { data: contacts, count, error } = await query;
+  // Same rules as the CSV export. Phone searches match the digits however they were typed.
+  const { data: contacts, count, error } = await applyContactFilters(base, filters);
 
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-6 p-8">
       <div className="flex items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold">{showArchived ? "Archived contacts" : "Contacts"}</h1>
-        <Button asChild>
-          <Link href="/contacts/new">Add contact</Link>
-        </Button>
+        <div className="flex gap-2">
+          {user.role === "admin" && <ExportButton href={`/export/contacts${filtersToQuery(filters)}`} />}
+          <Button asChild>
+            <Link href="/contacts/new">Add contact</Link>
+          </Button>
+        </div>
       </div>
 
       <form className="flex flex-wrap items-center gap-3" role="search">

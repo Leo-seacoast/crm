@@ -12,6 +12,11 @@ import {
 
 export const metadata = { title: "Activity · CRM" };
 
+function exportRows(context: unknown): string {
+  const rows = context && typeof context === "object" ? (context as { rows?: unknown }).rows : undefined;
+  return typeof rows === "number" ? rows.toLocaleString("en-US") : "?";
+}
+
 const PAGE_SIZE = 100;
 
 export default async function ActivityPage() {
@@ -21,7 +26,7 @@ export default async function ActivityPage() {
   const { data: entries, error } = await supabase
     .from("activity_log")
     .select(
-      "id, occurred_at, actor_type, action, table_name, record_id, changes, actor:profiles(full_name, email)",
+      "id, occurred_at, actor_type, action, table_name, record_id, changes, context, actor:profiles(full_name, email)",
     )
     .order("occurred_at", { ascending: false })
     .limit(PAGE_SIZE);
@@ -68,6 +73,7 @@ export default async function ActivityPage() {
             <li key={e.id} className="flex flex-col gap-1 py-3">
               <div className="text-sm">
                 <strong>{who}</strong> {actionLabel(e.action)} {tableLabel(e.table_name).toLowerCase()}
+                {e.action === "export" && ` records to CSV (${exportRows(e.context)} rows)`}
                 {name && (
                   <>
                     {" "}

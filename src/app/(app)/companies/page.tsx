@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { cleanSearch, pageNumber } from "@/lib/search";
+import { pageNumber } from "@/lib/search";
+import { applyCompanyFilters, filtersToQuery, parseCompanyFilters } from "@/lib/records/list-filters";
+import { requireUser } from "@/lib/auth/session";
+import { ExportButton } from "@/components/export-button";
 import { formatPhone } from "@/lib/phone";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,29 +20,30 @@ export default async function CompaniesPage({
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const params = await searchParams;
-  const q = cleanSearch(params.q);
-  const showArchived = params.archived === "1";
+  const filters = parseCompanyFilters(params);
+  const { q, archived: showArchived } = filters;
   const page = pageNumber(params.page);
+  const user = await requireUser();
 
   const supabase = await createClient();
-  let query = supabase
+  const base = supabase
     .from("companies")
     .select("id, name, website, email, phone, city, archived_at", { count: "exact" })
     .order("name", { ascending: true })
     .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
 
-  query = showArchived ? query.not("archived_at", "is", null) : query.is("archived_at", null);
-  if (q) query = query.ilike("search_text", `%${q}%`);
-
-  const { data: companies, count, error } = await query;
+  const { data: companies, count, error } = await applyCompanyFilters(base, filters);
 
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-6 p-8">
       <div className="flex items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold">{showArchived ? "Archived companies" : "Companies"}</h1>
-        <Button asChild>
-          <Link href="/companies/new">Add company</Link>
-        </Button>
+        <div className="flex gap-2">
+          {user.role === "admin" && <ExportButton href={`/export/companies${filtersToQuery(filters)}`} />}
+          <Button asChild>
+            <Link href="/companies/new">Add company</Link>
+          </Button>
+        </div>
       </div>
 
       <form className="flex flex-wrap items-center gap-3" role="search">

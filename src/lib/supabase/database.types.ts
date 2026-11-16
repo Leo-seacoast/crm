@@ -521,6 +521,10 @@ export type Database = {
         Returns: Database["public"]["Enums"]["actor_type"]
       }
       is_admin: { Args: never; Returns: boolean }
+      log_export: {
+        Args: { p_filters: Json; p_row_count: number; p_table: string }
+        Returns: undefined
+      }
       set_user_role: {
         Args: {
           new_role: Database["public"]["Enums"]["app_role"]
