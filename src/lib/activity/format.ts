@@ -7,6 +7,7 @@ const TABLE_LABELS: Record<string, string> = {
   deals: "Deal",
   pipelines: "Pipeline",
   pipeline_stages: "Stage",
+  notes: "Note",
 };
 
 const ACTION_LABELS: Record<string, string> = {
@@ -25,6 +26,7 @@ const FIELD_LABELS: Record<string, string> = {
   company_id: "Company",
   closed_at: "Closed",
   expected_close_date: "Expected close date",
+  body: "Text",
 };
 
 /** Fields that point at another record; their ids are swapped for names when shown. */

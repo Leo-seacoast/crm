@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArchiveButton } from "@/components/archive-button";
 import { RecordHistory } from "@/components/record-history";
 import { RelatedDeals } from "@/components/related-deals";
+import { NotesSection } from "@/components/notes/notes-section";
 import { CONTACT_TYPE_LABELS } from "@/lib/records/schemas";
 import { archiveCompany } from "../actions";
 
@@ -122,6 +123,8 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
           ))}
         </ul>
       </section>
+
+      <NotesSection kind="company" recordId={id} readOnly={archived} />
 
       <RelatedDeals by="company_id" id={id} allowAdd={!archived} />
 

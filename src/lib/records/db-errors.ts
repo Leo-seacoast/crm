@@ -15,7 +15,7 @@ export function friendlyDbError(error: DbError): string {
       if (/row-level security|permission denied/i.test(error.message ?? "")) {
         return "You don't have permission to do that.";
       }
-      if (/opt|consent|admin|role|stage|pipeline|archived/i.test(error.message ?? "")) return error.message!;
+      if (/opt|consent|admin|role|stage|pipeline|archived|note/i.test(error.message ?? "")) return error.message!;
       return "You don't have permission to do that.";
     case "23514": // check rule
       return "Some details aren't valid. Please check the form.";

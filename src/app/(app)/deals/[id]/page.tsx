@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArchiveButton } from "@/components/archive-button";
 import { RecordHistory } from "@/components/record-history";
+import { NotesSection } from "@/components/notes/notes-section";
 import { archiveDeal } from "../actions";
 import { StagePicker } from "./stage-picker";
 
@@ -97,6 +98,8 @@ export default async function DealPage({ params }: { params: Promise<{ id: strin
           )}
         </Detail>
       </dl>
+
+      <NotesSection kind="deal" recordId={id} readOnly={archived} />
 
       <RecordHistory table="deals" recordId={id} />
     </main>

@@ -330,6 +330,70 @@ export type Database = {
           },
         ]
       }
+      notes: {
+        Row: {
+          archived_at: string | null
+          body: string
+          company_id: string | null
+          contact_id: string | null
+          created_at: string
+          created_by: string | null
+          deal_id: string | null
+          id: string
+          owner_id: string | null
+          pinned: boolean
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string | null
+          body: string
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          deal_id?: string | null
+          id?: string
+          owner_id?: string | null
+          pinned?: boolean
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string | null
+          body?: string
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          deal_id?: string | null
+          id?: string
+          owner_id?: string | null
+          pinned?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notes_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notes_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notes_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pipeline_stages: {
         Row: {
           archived_at: string | null

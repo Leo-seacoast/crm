@@ -236,7 +236,14 @@ export const dealSchema = z
   });
 export type DealInput = z.infer<typeof dealSchema>;
 
-export const pipelineNameSchema = z.string().trim().min(1, "Name is required").max(100, "Name is too long");
+export const NOTE_MAX_LENGTH = 10_000;
+export const noteBodySchema = z
+  .string({ message: "Write something first" })
+  .trim()
+  .min(1, "Write something first")
+  .max(NOTE_MAX_LENGTH, `Notes can be up to ${NOTE_MAX_LENGTH.toLocaleString("en-US")} characters`);
+
+export const pipelineNameSchema =z.string().trim().min(1, "Name is required").max(100, "Name is too long");
 
 // ---------------------------------------------------------------------------
 // Reading HTML form data
