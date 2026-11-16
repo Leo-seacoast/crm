@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireUser } from "@/lib/auth/session";
 import { logout } from "@/app/login/actions";
 
@@ -8,7 +9,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   return (
     <div className="min-h-screen">
       <header className="flex items-center justify-between border-b border-neutral-200 px-6 py-3 dark:border-neutral-800">
-        <span className="font-semibold">CRM</span>
+        <nav className="flex items-center gap-6 text-sm">
+          <Link href="/" className="font-semibold">
+            CRM
+          </Link>
+          <Link href="/activity" className="hover:underline">
+            Activity
+          </Link>
+        </nav>
         <div className="flex items-center gap-4 text-sm">
           <span>
             {user.fullName ?? user.email}{" "}

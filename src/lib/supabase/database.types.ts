@@ -39,6 +39,50 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          actor_type: Database["public"]["Enums"]["actor_type"]
+          changes: Json | null
+          context: Json | null
+          id: number
+          occurred_at: string
+          record_id: string | null
+          table_name: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          actor_type: Database["public"]["Enums"]["actor_type"]
+          changes?: Json | null
+          context?: Json | null
+          id?: never
+          occurred_at?: string
+          record_id?: string | null
+          table_name: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          actor_type?: Database["public"]["Enums"]["actor_type"]
+          changes?: Json | null
+          context?: Json | null
+          id?: never
+          occurred_at?: string
+          record_id?: string | null
+          table_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_log_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           archived_at: string | null
@@ -80,6 +124,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_standard_triggers: { Args: { target: unknown }; Returns: undefined }
+      current_actor_type: {
+        Args: never
+        Returns: Database["public"]["Enums"]["actor_type"]
+      }
       is_admin: { Args: never; Returns: boolean }
       set_user_role: {
         Args: {
@@ -90,6 +139,7 @@ export type Database = {
       }
     }
     Enums: {
+      actor_type: "user" | "system" | "automation"
       app_role: "admin" | "member"
     }
     CompositeTypes: {
@@ -221,6 +271,7 @@ export const Constants = {
   },
   public: {
     Enums: {
+      actor_type: ["user", "system", "automation"],
       app_role: ["admin", "member"],
     },
   },
