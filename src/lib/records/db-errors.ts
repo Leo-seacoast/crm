@@ -20,7 +20,7 @@ export function friendlyDbError(error: DbError): string {
     case "23514": // check rule
       return "Some details aren't valid. Please check the form.";
     case "22023":
-      return error.message?.startsWith("Unknown time zone") ? "Choose a time zone from the list." : "Invalid value.";
+      return /time zone/i.test(error.message ?? "") ? "Choose a time zone from the list." : "Invalid value.";
     case "PGRST116": // no rows (e.g. archived record a member can't edit)
       return "This record can't be changed (it may be archived).";
     default:

@@ -11,6 +11,7 @@ import { ArchiveButton } from "@/components/archive-button";
 import { RecordHistory } from "@/components/record-history";
 import { RelatedDeals } from "@/components/related-deals";
 import { NotesSection } from "@/components/notes/notes-section";
+import { ExtraFields } from "@/components/extra-fields";
 import { archiveContact } from "../actions";
 
 export default async function ContactPage({ params }: { params: Promise<{ id: string }> }) {
@@ -89,7 +90,10 @@ export default async function ContactPage({ params }: { params: Promise<{ id: st
             <div key={line}>{line}</div>
           ))}
         </Detail>
-        <Detail label="Source">{c.source}</Detail>
+        <Detail label="Source">
+          {c.source}
+          {c.ghl_id && <div className="text-xs text-muted-foreground">GHL ID: {c.ghl_id}</div>}
+        </Detail>
         <Detail label="Tags">
           <div className="flex flex-wrap gap-1">
             {c.tags.map((t) => (
@@ -106,6 +110,8 @@ export default async function ContactPage({ params }: { params: Promise<{ id: st
         <Consent label="Email" status={c.email_consent} at={c.email_consent_at} source={c.email_consent_source} />
         <Consent label="SMS" status={c.sms_consent} at={c.sms_consent_at} source={c.sms_consent_source} />
       </section>
+
+      <ExtraFields fields={c.extra_fields} />
 
       <NotesSection kind="contact" recordId={id} readOnly={archived} />
 

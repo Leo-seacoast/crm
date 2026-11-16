@@ -57,6 +57,24 @@ All database changes are migration files in `supabase/migrations/`. Never edit t
 | `npm run make-admin -- you@example.com` | Makes an existing account an admin (development) |
 | `npm run make-admin:staging -- you@example.com` | Same, on staging                       |
 
+## Importing from GHL
+
+Admins: **Settings → Import**. Upload a GHL contacts CSV export, check how the columns
+match, look at the preview (new / already in the CRM / skipped / warnings), then import.
+Every import can be undone from the same page.
+
+- GHL "DND" → opted out; everyone else → "not asked" (an export doesn't prove consent).
+- Columns without a CRM field (e.g. member codes, credits) are kept as **extra fields**.
+- The GHL contact ID is stored, so re-importing the same file never duplicates people.
+
+Fake files for testing and demos (never use real customer data outside production):
+
+| Command | What it does |
+| ------- | ------------ |
+| `docs/samples/fake-ghl-contacts-50.csv` | Ready-made 50-row fake GHL export |
+| `node scripts/make-fake-ghl-export.mjs 16187 out.csv` | Makes a fake export of any size |
+| `npm run demo:load:staging` / `demo:remove:staging` | Adds / removes fake demo records on staging |
+
 ## Error monitoring
 
 Sentry (via the wrapper in `src/lib/monitoring/`) reports errors from staging and

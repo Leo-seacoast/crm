@@ -9,6 +9,7 @@ const TABLE_LABELS: Record<string, string> = {
   pipeline_stages: "Stage",
   notes: "Note",
   activity_log: "Activity log",
+  imports: "Import",
 };
 
 const ACTION_LABELS: Record<string, string> = {
@@ -35,7 +36,7 @@ const FIELD_LABELS: Record<string, string> = {
 export const REFERENCE_FIELDS = ["stage_id", "pipeline_id", "contact_id", "company_id"] as const;
 
 /** Fields not worth showing to a person reading the history. */
-const HIDDEN_FIELDS = new Set(["id", "created_at", "updated_at", "created_by", "owner_id", "position"]);
+const HIDDEN_FIELDS = new Set(["id", "created_at", "updated_at", "created_by", "owner_id", "position", "import_id"]);
 
 /** Who did it, in words. A person whose account was removed is never shown as "System". */
 export function actorLabel(

@@ -34,6 +34,9 @@ yarn-error.log*
 .env*
 !.env.example
 
+# temporary test files served by the dev server (never committed)
+/public/__test__/
+
 # supabase local temp files
 supabase/.temp/
 supabase/.branches/

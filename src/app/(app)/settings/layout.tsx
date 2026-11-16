@@ -13,6 +13,9 @@ export default async function SettingsLayout({ children }: { children: React.Rea
         <Link href="/settings/pipelines" className="hover:underline">
           Pipelines
         </Link>
+        <Link href="/settings/import" className="hover:underline">
+          Import
+        </Link>
         <Link href="/settings/export" className="hover:underline">
           Export
         </Link>

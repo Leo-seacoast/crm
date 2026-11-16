@@ -93,7 +93,10 @@ export type Database = {
           created_at: string
           created_by: string | null
           email: string | null
+          extra_fields: Json
+          ghl_id: string | null
           id: string
+          import_id: string | null
           name: string
           owner_id: string | null
           phone: string | null
@@ -113,7 +116,10 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           email?: string | null
+          extra_fields?: Json
+          ghl_id?: string | null
           id?: string
+          import_id?: string | null
           name: string
           owner_id?: string | null
           phone?: string | null
@@ -133,7 +139,10 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           email?: string | null
+          extra_fields?: Json
+          ghl_id?: string | null
           id?: string
+          import_id?: string | null
           name?: string
           owner_id?: string | null
           phone?: string | null
@@ -144,7 +153,15 @@ export type Database = {
           updated_at?: string
           website?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "companies_import_id_fkey"
+            columns: ["import_id"]
+            isOneToOne: false
+            referencedRelation: "imports"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       contacts: {
         Row: {
@@ -160,8 +177,11 @@ export type Database = {
           email_consent: Database["public"]["Enums"]["consent_status"]
           email_consent_at: string | null
           email_consent_source: string | null
+          extra_fields: Json
           first_name: string | null
+          ghl_id: string | null
           id: string
+          import_id: string | null
           last_name: string | null
           owner_id: string | null
           phone: string | null
@@ -190,8 +210,11 @@ export type Database = {
           email_consent?: Database["public"]["Enums"]["consent_status"]
           email_consent_at?: string | null
           email_consent_source?: string | null
+          extra_fields?: Json
           first_name?: string | null
+          ghl_id?: string | null
           id?: string
+          import_id?: string | null
           last_name?: string | null
           owner_id?: string | null
           phone?: string | null
@@ -220,8 +243,11 @@ export type Database = {
           email_consent?: Database["public"]["Enums"]["consent_status"]
           email_consent_at?: string | null
           email_consent_source?: string | null
+          extra_fields?: Json
           first_name?: string | null
+          ghl_id?: string | null
           id?: string
+          import_id?: string | null
           last_name?: string | null
           owner_id?: string | null
           phone?: string | null
@@ -245,6 +271,13 @@ export type Database = {
             referencedRelation: "companies"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "contacts_import_id_fkey"
+            columns: ["import_id"]
+            isOneToOne: false
+            referencedRelation: "imports"
+            referencedColumns: ["id"]
+          },
         ]
       }
       deals: {
@@ -257,7 +290,10 @@ export type Database = {
           created_by: string | null
           currency: string
           expected_close_date: string | null
+          extra_fields: Json
+          ghl_id: string | null
           id: string
+          import_id: string | null
           owner_id: string | null
           pipeline_id: string
           stage_id: string
@@ -274,7 +310,10 @@ export type Database = {
           created_by?: string | null
           currency?: string
           expected_close_date?: string | null
+          extra_fields?: Json
+          ghl_id?: string | null
           id?: string
+          import_id?: string | null
           owner_id?: string | null
           pipeline_id: string
           stage_id: string
@@ -291,7 +330,10 @@ export type Database = {
           created_by?: string | null
           currency?: string
           expected_close_date?: string | null
+          extra_fields?: Json
+          ghl_id?: string | null
           id?: string
+          import_id?: string | null
           owner_id?: string | null
           pipeline_id?: string
           stage_id?: string
@@ -315,6 +357,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "deals_import_id_fkey"
+            columns: ["import_id"]
+            isOneToOne: false
+            referencedRelation: "imports"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "deals_pipeline_id_fkey"
             columns: ["pipeline_id"]
             isOneToOne: false
@@ -330,6 +379,72 @@ export type Database = {
           },
         ]
       }
+      imports: {
+        Row: {
+          archived_at: string | null
+          companies_created: number
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          created_count: number
+          error_count: number
+          file_name: string
+          id: string
+          kind: Database["public"]["Enums"]["import_kind"]
+          owner_id: string | null
+          settings: Json
+          skipped_count: number
+          source: string
+          status: Database["public"]["Enums"]["import_status"]
+          total_rows: number
+          undone_at: string | null
+          updated_at: string
+          updated_count: number
+        }
+        Insert: {
+          archived_at?: string | null
+          companies_created?: number
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          created_count?: number
+          error_count?: number
+          file_name: string
+          id?: string
+          kind: Database["public"]["Enums"]["import_kind"]
+          owner_id?: string | null
+          settings?: Json
+          skipped_count?: number
+          source?: string
+          status?: Database["public"]["Enums"]["import_status"]
+          total_rows?: number
+          undone_at?: string | null
+          updated_at?: string
+          updated_count?: number
+        }
+        Update: {
+          archived_at?: string | null
+          companies_created?: number
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          created_count?: number
+          error_count?: number
+          file_name?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["import_kind"]
+          owner_id?: string | null
+          settings?: Json
+          skipped_count?: number
+          source?: string
+          status?: Database["public"]["Enums"]["import_status"]
+          total_rows?: number
+          undone_at?: string | null
+          updated_at?: string
+          updated_count?: number
+        }
+        Relationships: []
+      }
       notes: {
         Row: {
           archived_at: string | null
@@ -340,6 +455,7 @@ export type Database = {
           created_by: string | null
           deal_id: string | null
           id: string
+          import_id: string | null
           owner_id: string | null
           pinned: boolean
           updated_at: string
@@ -353,6 +469,7 @@ export type Database = {
           created_by?: string | null
           deal_id?: string | null
           id?: string
+          import_id?: string | null
           owner_id?: string | null
           pinned?: boolean
           updated_at?: string
@@ -366,6 +483,7 @@ export type Database = {
           created_by?: string | null
           deal_id?: string | null
           id?: string
+          import_id?: string | null
           owner_id?: string | null
           pinned?: boolean
           updated_at?: string
@@ -390,6 +508,13 @@ export type Database = {
             columns: ["deal_id"]
             isOneToOne: false
             referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notes_import_id_fkey"
+            columns: ["import_id"]
+            isOneToOne: false
+            referencedRelation: "imports"
             referencedColumns: ["id"]
           },
         ]
@@ -516,13 +641,51 @@ export type Database = {
     }
     Functions: {
       add_standard_triggers: { Args: { target: unknown }; Returns: undefined }
+      begin_import_context: {
+        Args: { p_import_id: string; p_what: string }
+        Returns: undefined
+      }
       current_actor_type: {
         Args: never
         Returns: Database["public"]["Enums"]["actor_type"]
       }
+      find_existing_contacts: {
+        Args: { p_emails: string[]; p_ghl_ids: string[]; p_phones: string[] }
+        Returns: {
+          email: string
+          first_name: string
+          ghl_id: string
+          id: string
+          last_name: string
+          phone: string
+        }[]
+      }
+      finish_import: {
+        Args: { p_import_id: string; p_skipped_in_preview: number }
+        Returns: undefined
+      }
+      import_companies: {
+        Args: { p_import_id: string; p_names: string[] }
+        Returns: {
+          id: string
+          name: string
+        }[]
+      }
+      import_contacts_batch: {
+        Args: { p_import_id: string; p_rows: Json }
+        Returns: Json
+      }
       is_admin: { Args: never; Returns: boolean }
       log_export: {
         Args: { p_filters: Json; p_row_count: number; p_table: string }
+        Returns: undefined
+      }
+      require_admin: { Args: never; Returns: undefined }
+      require_open_import: {
+        Args: {
+          p_import_id: string
+          p_kind: Database["public"]["Enums"]["import_kind"]
+        }
         Returns: undefined
       }
       set_user_role: {
@@ -532,12 +695,27 @@ export type Database = {
         }
         Returns: undefined
       }
+      start_import: {
+        Args: {
+          p_file_name: string
+          p_kind: Database["public"]["Enums"]["import_kind"]
+          p_settings: Json
+          p_total_rows: number
+        }
+        Returns: string
+      }
+      undo_import_step: {
+        Args: { p_import_id: string; p_limit?: number }
+        Returns: Json
+      }
     }
     Enums: {
       actor_type: "user" | "system" | "automation"
       app_role: "admin" | "member"
       consent_status: "unknown" | "opted_in" | "opted_out"
       contact_type: "lead" | "client" | "owner" | "guest" | "vendor" | "partner"
+      import_kind: "contacts" | "companies" | "deals" | "notes"
+      import_status: "in_progress" | "completed" | "undone"
       stage_kind: "open" | "won" | "lost"
     }
     CompositeTypes: {
@@ -673,6 +851,8 @@ export const Constants = {
       app_role: ["admin", "member"],
       consent_status: ["unknown", "opted_in", "opted_out"],
       contact_type: ["lead", "client", "owner", "guest", "vendor", "partner"],
+      import_kind: ["contacts", "companies", "deals", "notes"],
+      import_status: ["in_progress", "completed", "undone"],
       stage_kind: ["open", "won", "lost"],
     },
   },
