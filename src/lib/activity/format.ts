@@ -10,6 +10,8 @@ const TABLE_LABELS: Record<string, string> = {
   notes: "Note",
   activity_log: "Activity log",
   imports: "Import",
+  tasks: "Task",
+  app_settings: "Settings",
 };
 
 const ACTION_LABELS: Record<string, string> = {
@@ -30,13 +32,18 @@ const FIELD_LABELS: Record<string, string> = {
   closed_at: "Closed",
   expected_close_date: "Expected close date",
   body: "Text",
+  due_date: "Due date",
+  due_time: "Due time",
+  completed_at: "Completed",
 };
 
 /** Fields that point at another record; their ids are swapped for names when shown. */
 export const REFERENCE_FIELDS = ["stage_id", "pipeline_id", "contact_id", "company_id"] as const;
 
 /** Fields not worth showing to a person reading the history. */
-const HIDDEN_FIELDS = new Set(["id", "created_at", "updated_at", "created_by", "owner_id", "position", "import_id"]);
+const HIDDEN_FIELDS = new Set([
+  "id", "created_at", "updated_at", "created_by", "owner_id", "position", "import_id", "completed_by",
+]);
 
 /** Who did it, in words. A person whose account was removed is never shown as "System". */
 export function actorLabel(

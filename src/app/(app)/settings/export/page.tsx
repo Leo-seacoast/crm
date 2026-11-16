@@ -7,6 +7,7 @@ const EXPORTS = [
   { href: "/export/contacts?archived=1", label: "Archived contacts", detail: "Only archived contacts." },
   { href: "/export/companies", label: "Companies", detail: "All active companies." },
   { href: "/export/deals", label: "Deals", detail: "All active deals in every pipeline, with stage and linked contact/company." },
+  { href: "/export/tasks", label: "Tasks", detail: "Every task (open, done and archived), with what it's linked to." },
   { href: "/export/notes", label: "Notes", detail: "Every note (including archived ones), with what it's attached to." },
   { href: "/export/activity", label: "Activity log", detail: "The full history of every change and export." },
 ];

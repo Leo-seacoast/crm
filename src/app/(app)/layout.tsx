@@ -13,6 +13,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <Link href="/" className="font-semibold">
             CRM
           </Link>
+          <Link href="/tasks" className="hover:underline">
+            Tasks
+          </Link>
           <Link href="/contacts" className="hover:underline">
             Contacts
           </Link>

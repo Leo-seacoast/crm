@@ -12,6 +12,7 @@ import { RecordHistory } from "@/components/record-history";
 import { RelatedDeals } from "@/components/related-deals";
 import { NotesSection } from "@/components/notes/notes-section";
 import { ExtraFields } from "@/components/extra-fields";
+import { TasksSection } from "@/components/tasks/tasks-section";
 import { archiveContact } from "../actions";
 
 export default async function ContactPage({ params }: { params: Promise<{ id: string }> }) {
@@ -110,6 +111,8 @@ export default async function ContactPage({ params }: { params: Promise<{ id: st
         <Consent label="Email" status={c.email_consent} at={c.email_consent_at} source={c.email_consent_source} />
         <Consent label="SMS" status={c.sms_consent} at={c.sms_consent_at} source={c.sms_consent_source} />
       </section>
+
+      <TasksSection kind="contact" recordId={id} readOnly={archived} />
 
       <ExtraFields fields={c.extra_fields} />
 

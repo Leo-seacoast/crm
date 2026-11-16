@@ -38,7 +38,21 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   // Exports read rows generically, so use the untyped client here.
   const db = supabase as unknown as SupabaseClient;
   const encoder = new TextEncoder();
-  let filtersUsed: Record<string, unknown> = {};
+
+  // Record the export FIRST (who, what, how many rows, which filters).
+  // If it can't be recorded, nothing is downloaded — no export goes unlogged.
+  const counted = def.filter(db.from(def.table).select("id", { count: "exact", head: true }), searchParams);
+  const { count, error: countError } = await counted.query;
+  if (countError) return new Response("Could not prepare the export. Please try again.", { status: 500 });
+  const { error: logError } = await supabase.rpc("log_export", {
+    p_table: def.table,
+    p_row_count: Math.min(count ?? 0, MAX_ROWS),
+    p_filters: counted.used as never,
+  });
+  if (logError) {
+    reportError(logError, { area: "csv-export", step: "log" });
+    return new Response("The export could not be recorded, so it was stopped. Please try again.", { status: 500 });
+  }
 
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
@@ -50,8 +64,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         // Read in batches, ordered by id, picking up after the last id each time.
         while (total < MAX_ROWS) {
           const base = db.from(def.table).select(def.select).order("id").limit(BATCH_SIZE);
-          const { query, used } = def.filter(lastId === null ? base : base.gt("id", lastId), searchParams);
-          filtersUsed = used;
+          const { query } = def.filter(lastId === null ? base : base.gt("id", lastId), searchParams);
           const { data, error } = await query;
           if (error) throw new Error("Could not read data for export");
           const rows = (data ?? []) as Record<string, unknown>[];
@@ -63,12 +76,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
           if (rows.length < BATCH_SIZE) break;
         }
 
-        // Record the export (who, what, how many, which filters).
-        await supabase.rpc("log_export", {
-          p_table: def.table,
-          p_row_count: total,
-          p_filters: filtersUsed as never,
-        });
         controller.close();
       } catch (e) {
         reportError(e, { area: "csv-export", table: def.table });

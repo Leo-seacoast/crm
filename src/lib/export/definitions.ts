@@ -17,7 +17,7 @@ type Query = any;
 export type Lookups = { people: Map<string, string> };
 
 export type ExportDefinition = {
-  table: "contacts" | "companies" | "deals" | "notes" | "activity_log";
+  table: "contacts" | "companies" | "deals" | "notes" | "tasks" | "activity_log";
   fileName: string;
   select: string;
   /** Applies the same filters as the matching list page; returns the filters used (for the log). */
@@ -152,6 +152,30 @@ export const EXPORTS: Record<string, ExportDefinition> = {
       { header: "deal_title", value: (r) => r.deal?.title },
       { header: "updated_at", value: (r) => r.updated_at },
       { header: "archived_at", value: (r) => r.archived_at },
+    ],
+  },
+
+  tasks: {
+    table: "tasks",
+    fileName: "tasks",
+    select: "*, contact:contacts(first_name, last_name, email), company:companies(name), deal:deals(title)",
+    filter: (query) => ({ query, used: { all: true } }),
+    columns: (l) => [
+      { header: "id", value: (r) => r.id },
+      { header: "title", value: (r) => r.title },
+      { header: "details", value: (r) => r.details },
+      { header: "due_date", value: (r) => r.due_date },
+      { header: "due_time", value: (r) => r.due_time },
+      { header: "status", value: (r) => r.status },
+      { header: "completed_at", value: (r) => r.completed_at },
+      { header: "completed_by", value: (r) => person(l, r.completed_by) },
+      { header: "contact_id", value: (r) => r.contact_id },
+      { header: "contact_name", value: (r) => fullName(r.contact) },
+      { header: "company_id", value: (r) => r.company_id },
+      { header: "company_name", value: (r) => r.company?.name },
+      { header: "deal_id", value: (r) => r.deal_id },
+      { header: "deal_title", value: (r) => r.deal?.title },
+      ...standard(l),
     ],
   },
 

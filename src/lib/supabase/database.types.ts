@@ -83,6 +83,48 @@ export type Database = {
           },
         ]
       }
+      app_settings: {
+        Row: {
+          archived_at: string | null
+          business_name: string | null
+          created_at: string
+          created_by: string | null
+          daily_summary_enabled: boolean
+          daily_summary_hour: number
+          id: string
+          owner_id: string | null
+          singleton: boolean
+          time_zone: string
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string | null
+          business_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          daily_summary_enabled?: boolean
+          daily_summary_hour?: number
+          id?: string
+          owner_id?: string | null
+          singleton?: boolean
+          time_zone?: string
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string | null
+          business_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          daily_summary_enabled?: boolean
+          daily_summary_hour?: number
+          id?: string
+          owner_id?: string | null
+          singleton?: boolean
+          time_zone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       companies: {
         Row: {
           address_line1: string | null
@@ -635,6 +677,85 @@ export type Database = {
         }
         Relationships: []
       }
+      tasks: {
+        Row: {
+          archived_at: string | null
+          company_id: string | null
+          completed_at: string | null
+          completed_by: string | null
+          contact_id: string | null
+          created_at: string
+          created_by: string | null
+          deal_id: string | null
+          details: string | null
+          due_date: string
+          due_time: string | null
+          id: string
+          owner_id: string | null
+          status: Database["public"]["Enums"]["task_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string | null
+          company_id?: string | null
+          completed_at?: string | null
+          completed_by?: string | null
+          contact_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          deal_id?: string | null
+          details?: string | null
+          due_date: string
+          due_time?: string | null
+          id?: string
+          owner_id?: string | null
+          status?: Database["public"]["Enums"]["task_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string | null
+          company_id?: string | null
+          completed_at?: string | null
+          completed_by?: string | null
+          contact_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          deal_id?: string | null
+          details?: string | null
+          due_date?: string
+          due_time?: string | null
+          id?: string
+          owner_id?: string | null
+          status?: Database["public"]["Enums"]["task_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -717,6 +838,7 @@ export type Database = {
       import_kind: "contacts" | "companies" | "deals" | "notes"
       import_status: "in_progress" | "completed" | "undone"
       stage_kind: "open" | "won" | "lost"
+      task_status: "open" | "done"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -854,6 +976,7 @@ export const Constants = {
       import_kind: ["contacts", "companies", "deals", "notes"],
       import_status: ["in_progress", "completed", "undone"],
       stage_kind: ["open", "won", "lost"],
+      task_status: ["open", "done"],
     },
   },
 } as const
