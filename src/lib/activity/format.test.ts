@@ -43,6 +43,7 @@ describe("activity log wording", () => {
     expect(formatValue(null)).toBe("(empty)");
     expect(formatValue("")).toBe("(empty)");
     expect(formatValue("x".repeat(200))).toHaveLength(78);
+    expect(formatValue("2026-11-16T13:31:24.448151+00:00")).toMatch(/Nov 16, 2026/);
   });
 
   it("finds a readable name for the record", () => {
@@ -50,6 +51,8 @@ describe("activity log wording", () => {
     expect(recordName({ full_name: { old: "A", new: "B" } })).toBe("B");
     expect(recordName({ email: "s@x.co" })).toBe("s@x.co");
     expect(recordName(null)).toBeNull();
+    expect(recordName({ first_name: "Jane", last_name: "Doe", email: "j@x.co" })).toBe("Jane Doe");
+    expect(recordName({ name: "Acme" })).toBe("Acme");
   });
 
   it("ignores malformed change data instead of crashing", () => {

@@ -83,6 +83,170 @@ export type Database = {
           },
         ]
       }
+      companies: {
+        Row: {
+          address_line1: string | null
+          address_line2: string | null
+          archived_at: string | null
+          city: string | null
+          country: string | null
+          created_at: string
+          created_by: string | null
+          email: string | null
+          id: string
+          name: string
+          owner_id: string | null
+          phone: string | null
+          postal_code: string | null
+          region: string | null
+          search_text: string | null
+          tags: string[]
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          address_line1?: string | null
+          address_line2?: string | null
+          archived_at?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          name: string
+          owner_id?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          region?: string | null
+          search_text?: string | null
+          tags?: string[]
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          address_line1?: string | null
+          address_line2?: string | null
+          archived_at?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          name?: string
+          owner_id?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          region?: string | null
+          search_text?: string | null
+          tags?: string[]
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      contacts: {
+        Row: {
+          address_line1: string | null
+          address_line2: string | null
+          archived_at: string | null
+          city: string | null
+          company_id: string | null
+          country: string | null
+          created_at: string
+          created_by: string | null
+          email: string | null
+          email_consent: Database["public"]["Enums"]["consent_status"]
+          email_consent_at: string | null
+          email_consent_source: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+          owner_id: string | null
+          phone: string | null
+          postal_code: string | null
+          region: string | null
+          search_text: string | null
+          sms_consent: Database["public"]["Enums"]["consent_status"]
+          sms_consent_at: string | null
+          sms_consent_source: string | null
+          source: string | null
+          tags: string[]
+          time_zone: string | null
+          types: Database["public"]["Enums"]["contact_type"][]
+          updated_at: string
+        }
+        Insert: {
+          address_line1?: string | null
+          address_line2?: string | null
+          archived_at?: string | null
+          city?: string | null
+          company_id?: string | null
+          country?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          email_consent?: Database["public"]["Enums"]["consent_status"]
+          email_consent_at?: string | null
+          email_consent_source?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          owner_id?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          region?: string | null
+          search_text?: string | null
+          sms_consent?: Database["public"]["Enums"]["consent_status"]
+          sms_consent_at?: string | null
+          sms_consent_source?: string | null
+          source?: string | null
+          tags?: string[]
+          time_zone?: string | null
+          types?: Database["public"]["Enums"]["contact_type"][]
+          updated_at?: string
+        }
+        Update: {
+          address_line1?: string | null
+          address_line2?: string | null
+          archived_at?: string | null
+          city?: string | null
+          company_id?: string | null
+          country?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          email_consent?: Database["public"]["Enums"]["consent_status"]
+          email_consent_at?: string | null
+          email_consent_source?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          owner_id?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          region?: string | null
+          search_text?: string | null
+          sms_consent?: Database["public"]["Enums"]["consent_status"]
+          sms_consent_at?: string | null
+          sms_consent_source?: string | null
+          source?: string | null
+          tags?: string[]
+          time_zone?: string | null
+          types?: Database["public"]["Enums"]["contact_type"][]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contacts_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           archived_at: string | null
@@ -141,6 +305,8 @@ export type Database = {
     Enums: {
       actor_type: "user" | "system" | "automation"
       app_role: "admin" | "member"
+      consent_status: "unknown" | "opted_in" | "opted_out"
+      contact_type: "lead" | "client" | "owner" | "guest" | "vendor" | "partner"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -273,6 +439,8 @@ export const Constants = {
     Enums: {
       actor_type: ["user", "system", "automation"],
       app_role: ["admin", "member"],
+      consent_status: ["unknown", "opted_in", "opted_out"],
+      contact_type: ["lead", "client", "owner", "guest", "vendor", "partner"],
     },
   },
 } as const

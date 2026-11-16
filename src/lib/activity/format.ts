@@ -2,6 +2,8 @@
 
 const TABLE_LABELS: Record<string, string> = {
   profiles: "Team member",
+  contacts: "Contact",
+  companies: "Company",
 };
 
 const ACTION_LABELS: Record<string, string> = {
@@ -41,6 +43,12 @@ export function humanize(key: string): string {
 
 export function formatValue(value: unknown): string {
   if (value === null || value === undefined || value === "") return "(empty)";
+  if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(value)) {
+    const d = new Date(value);
+    if (!Number.isNaN(d.getTime())) {
+      return d.toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" });
+    }
+  }
   const text = typeof value === "string" ? value : JSON.stringify(value);
   return text.length > 80 ? `${text.slice(0, 77)}…` : text;
 }
@@ -71,5 +79,6 @@ export function recordName(changes: unknown): string | null {
       return (v as { new: string }).new;
     return null;
   };
-  return pick("full_name") ?? pick("name") ?? pick("email");
+  const person = [pick("first_name"), pick("last_name")].filter(Boolean).join(" ");
+  return pick("full_name") ?? (person || null) ?? pick("name") ?? pick("email");
 }
