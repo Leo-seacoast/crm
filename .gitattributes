@@ -1,0 +1,5 @@
+# Store all text files with Unix line endings, regardless of operating system.
+* text=auto eol=lf
+*.ico binary
+*.png binary
+*.jpg binary
